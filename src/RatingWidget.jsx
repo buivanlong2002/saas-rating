@@ -26,8 +26,8 @@ const TESTIMONIALS = [
 ];
 
 const GOOGLE_PLACE_ID = 'ChIJN1t_tDeuEmsRUsoyG83frY4';
-const FACEBOOK_PAGE_URL = 'https://www.facebook.com/your-page'; // Thay thế bằng URL Facebook page thực tế
-const YELP_PAGE_URL = 'https://www.yelp.com/biz/your-business'; // Thay thế bằng URL Yelp page thực tế
+const FACEBOOK_PAGE_URL = 'https://www.facebook.com/your-page';
+const YELP_PAGE_URL = 'https://www.yelp.com/biz/your-business';
 
 function RatingWidget() {
   const [langData, setLangData] = useState(null);
@@ -45,7 +45,6 @@ function RatingWidget() {
       const urlParams = new URLSearchParams(window.location.search);
       const lang = urlParams.get('lang') || 'en';
       
-      // Sử dụng thông tin từ URL parameters hoặc mặc định
       setCustomerName(urlParams.get('customerName') || 'Customer');
       setSalonName(urlParams.get('salonName') || '');
 
@@ -71,7 +70,6 @@ function RatingWidget() {
       setShowFeedbackForm(true);
       setShowReviewOptions(false);
     } else if (selectedRating >= 4) {
-      // For "Good" (4) and "Great" (5) ratings, show only review options
       setShowFeedbackForm(false);
       submitRatingData(selectedRating, '', true);
       const timer = setTimeout(() => {
@@ -92,7 +90,6 @@ function RatingWidget() {
   };
 
   const submitRatingData = async (rating, feedbackText, redirected) => {
-    // Lấy token từ localStorage
     const reviewToken = localStorage.getItem('reviewToken');
     
     if (!reviewToken) {
@@ -103,19 +100,17 @@ function RatingWidget() {
     try {
       console.log('Submitting review with token:', reviewToken, 'rating:', rating, 'feedback:', feedbackText);
       
-      // Gọi API submit review thực tế
       const result = await apiService.submitReview(
         reviewToken,
         rating,
         feedbackText,
-        null // Để backend sử dụng mặc định
+        null
       );
 
       console.log('API result:', result);
 
       if (result.success) {
         console.log('Review submitted successfully:', result);
-        // Clear localStorage sau khi submit thành công
         localStorage.removeItem('reviewToken');
         return { success: true, message: result.message };
       } else {
@@ -141,7 +136,6 @@ function RatingWidget() {
       
       if (result.success) {
         setSubmissionStatus('submitted');
-        // Không cần alert nữa, sẽ hiển thị UI cảm ơn
       } else {
         alert(`Lỗi: ${result.message}`);
         setSubmissionStatus('idle');
@@ -154,239 +148,440 @@ function RatingWidget() {
   };
 
   if (!langData) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        fontSize: '16px'
+      }}>
+        Đang tải...
+      </div>
+    );
   }
 
   const getSubmitButtonText = () => {
-    if (submissionStatus === 'submitting') return langData.submitting || 'Submitting...';
-    if (submissionStatus === 'submitted') return langData.submitted || 'Submitted ✓';
-    return langData.submitFeedback || 'Submit Feedback';
+    if (submissionStatus === 'submitting') return 'Đang gửi...';
+    if (submissionStatus === 'submitted') return 'Đã gửi ✓';
+    return 'Gửi phản hồi';
   };
 
-  // Hiển thị màn hình cảm ơn khi đã submit thành công
+  // Success Screen - Mobile Design
   if (submissionStatus === 'submitted') {
     return (
-      <div className="rating-widget" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd', padding: '1rem' }}>
-        <div className="container" style={{ maxWidth: '600px', width: '100%', margin: '0 auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', borderRadius: '16px', background: '#ebeef5', padding: '4px' }}>
-          <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed', textAlign: 'center' }}>
-            
-            {/* Icon cảm ơn */}
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                background: 'linear-gradient(135deg, #4CAF50, #45a049)', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                margin: '0 auto',
-                boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)'
-              }}>
-                <span style={{ fontSize: '40px', color: 'white' }}>✓</span>
-              </div>
-            </div>
-
-            {/* Tiêu đề cảm ơn */}
-            <h1 style={{ 
-              fontSize: '28px', 
-              fontWeight: '700', 
-              color: '#2E7D32', 
-              marginBottom: '1rem',
-              textAlign: 'center'
-            }}>
-              Cảm ơn bạn! 🙏
-            </h1>
-
-            {/* Nội dung cảm ơn */}
-            <div style={{ marginBottom: '2rem' }}>
-              <p style={{ 
-                fontSize: '18px', 
-                color: '#424242', 
-                lineHeight: '1.6',
-                marginBottom: '1rem'
-              }}>
-                Chúng tôi rất trân trọng đánh giá của bạn về dịch vụ tại <strong>{salonName}</strong>.
-              </p>
-              
-              <p style={{ 
-                fontSize: '16px', 
-                color: '#666', 
-                lineHeight: '1.5'
-              }}>
-                Phản hồi của bạn sẽ giúp chúng tôi cải thiện chất lượng dịch vụ và mang đến trải nghiệm tốt hơn cho tất cả khách hàng.
-              </p>
-            </div>
-
-            {/* Thông tin bổ sung */}
-            <div style={{ 
-              background: '#f8f9fa', 
-              padding: '1.5rem', 
-              borderRadius: '12px', 
-              border: '1px solid #e9ecef',
-              marginBottom: '2rem'
-            }}>
-              <p style={{ 
-                fontSize: '14px', 
-                color: '#6c757d', 
-                margin: '0',
-                fontStyle: 'italic'
-              }}>
-                💡 <strong>Mẹo:</strong> Hãy chia sẻ trải nghiệm tuyệt vời này với bạn bè và gia đình!
-              </p>
-            </div>
-
-            {/* Nút đóng */}
-            <button 
-              onClick={() => window.close()} 
-              style={{
-                background: 'linear-gradient(135deg, #4CAF50, #45a049)',
-                color: 'white',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 2px 8px rgba(76, 175, 80, 0.3)';
-              }}
-            >
-              Đóng trang
-            </button>
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '20px',
+          padding: '30px 20px',
+          textAlign: 'center',
+          maxWidth: '400px',
+          width: '100%',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+        }}>
+          {/* Success Icon */}
+          <div style={{
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 20px',
+            boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)'
+          }}>
+            <span style={{ fontSize: '30px', color: 'white' }}>✓</span>
           </div>
+
+          <h1 style={{
+            fontSize: '24px',
+            fontWeight: '700',
+            color: '#2E7D32',
+            marginBottom: '15px'
+          }}>
+            Cảm ơn bạn! 🙏
+          </h1>
+
+          <p style={{
+            fontSize: '16px',
+            color: '#424242',
+            lineHeight: '1.5',
+            marginBottom: '15px'
+          }}>
+            Chúng tôi rất trân trọng đánh giá của bạn về dịch vụ tại <strong>{salonName}</strong>.
+          </p>
+
+          <div style={{
+            background: '#f8f9fa',
+            padding: '15px',
+            borderRadius: '12px',
+            marginBottom: '20px'
+          }}>
+            <p style={{
+              fontSize: '14px',
+              color: '#6c757d',
+              margin: '0',
+              fontStyle: 'italic'
+            }}>
+              💡 <strong>Mẹo:</strong> Hãy chia sẻ trải nghiệm tuyệt vời này với bạn bè và gia đình!
+            </p>
+          </div>
+
+          <button 
+            onClick={() => window.close()} 
+            style={{
+              background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+              color: 'white',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: '25px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)',
+              width: '100%'
+            }}
+          >
+            Đóng trang
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="rating-widget" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd', padding: '1rem' }}>
-      <div className="container" style={{ maxWidth: '1024px', width: '100%', margin: '0 auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', borderRadius: '16px', background: '#ebeef5', padding: '4px' }}>
-        <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed' }}>
-          
-          <div className="header" style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-            <h1 className="greeting" style={{ fontSize: '24px', fontWeight: '600', color: '#131316', marginBottom: '8px' }}>
-              {langData.greeting.replace('{customerName}', customerName)}
-            </h1>
-            <p className="question" style={{ fontSize: '18px', color: '#131316', marginBottom: '4px' }}>{langData.question}</p>
-          </div>
-
-          <div className="rating-section" style={{ marginBottom: '0' }}>
-            <div className="stars-container" style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '8px', position: 'relative' }}>
-              {RATING_EMOJIS.map((rating) => (
-                <label key={rating.value} className="star-button" style={{ cursor: 'pointer', padding: '8px', borderRadius: '8px', minWidth: '80px', position: 'relative' }}>
-                  <input
-                    type="radio"
-                    name="rating"
-                    value={rating.value}
-                    style={{ display: 'none' }}
-                    onChange={() => handleRatingChange(rating.value)}
-                    checked={selectedRating === rating.value}
-                  />
-                  <img
-                    className="emoji"
-                    src={rating.src}
-                    alt={rating.alt}
-                    style={{
-                      width: '32px',
-                      height: 'auto',
-                      opacity: selectedRating === rating.value ? 1 : 0.4,
-                      transform: selectedRating === rating.value ? 'scale(1.2)' : 'scale(1)',
-                      transition: 'opacity 0.3s, transform 0.3s'
-                    }}
-                  />
-                  {selectedRating === rating.value && (
-                                         <div className="rating-tooltip" style={{ 
-                       position: 'absolute', 
-                       top: '-48px', 
-                       left: '50%', 
-                       transform: 'translateX(-50%)', 
-                       padding: '8px 16px', 
-                       fontSize: '16px', 
-                       fontWeight: '600', 
-                       color: 'white', 
-                       borderRadius: '16px', 
-                       border: '1px solid #a78bfa', 
-                       zIndex: 30, 
-                       whiteSpace: 'nowrap',
-                       background: 'linear-gradient(90deg,#a78bfa 0%,#fbc2eb 100%)', 
-                       boxShadow: '0 4px 16px 0 rgba(167,139,250,0.12)'
-                     }}>
-                      {langData.ratingLabels[selectedRating]}
-                    </div>
-                  )}
-                </label>
-              ))}
-            </div>
-          </div>
-          
-          {showFeedbackForm && (
-            <div className="feedback-form" style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '12px', padding: '24px', marginTop: '32px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.2)', transition: 'all 0.5s ease-in-out' }}>
-              <form onSubmit={handleSubmitFeedback}>
-                <h3 className="feedback-title" style={{ fontSize: '18px', fontWeight: '500', color: '#131316', marginBottom: '16px' }}>{langData.feedbackTitle}</h3>
-                <textarea
-                  className="feedback-input"
-                  style={{ width: '100%', minHeight: '100px', background: 'white', border: '2px solid #d9dfed', borderRadius: '8px', padding: '16px', color: '#131316', fontSize: '16px', resize: 'vertical', marginBottom: '16px' }}
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  placeholder={langData.feedbackPlaceholder}
-                  maxLength="500"
-                />
-                <button
-                  type="submit"
-                  className="submit-button"
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#7852f4', border: 'none', cursor: 'pointer', transition: 'all 0.3s' }}
-                  disabled={submissionStatus !== 'idle'}
-                >
-                  {getSubmitButtonText()}
-                </button>
-              </form>
-            </div>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: '20px',
+        padding: '25px 20px',
+        maxWidth: '400px',
+        width: '100%',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+      }}>
+        
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <h1 style={{
+            fontSize: '22px',
+            fontWeight: '700',
+            color: '#1a202c',
+            marginBottom: '8px',
+            lineHeight: '1.3'
+          }}>
+            {langData.greeting.replace('{customerName}', customerName)}
+          </h1>
+          <p style={{
+            fontSize: '16px',
+            color: '#4a5568',
+            marginBottom: '5px'
+          }}>
+            {langData.question}
+          </p>
+          {salonName && (
+            <p style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#2d3748'
+            }}>
+              {salonName}
+            </p>
           )}
+        </div>
 
-                     {showReviewOptions && (
-             <div ref={reviewOptionsRef} id="reviewOptions" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 0' }}>
-               <h2 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px' }}>{langData.reviewOptionsTitle}</h2>
-               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '320px' }}>
-                 <a href={`https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`} id="reviewGoogle" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#FFC107', textDecoration: 'none', transition: 'background 0.3s' }}>
-                   <span style={{ fontSize: '18px' }}>G</span>
-                   {langData.reviewGoogle}
-                 </a>
-                 <a href={FACEBOOK_PAGE_URL} id="reviewFacebook" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#1877F2', textDecoration: 'none', transition: 'background 0.3s' }}>
-                   <span style={{ fontSize: '18px' }}>f</span>
-                   {langData.reviewFacebook}
-                 </a>
-                 <a href={YELP_PAGE_URL} id="reviewYelp" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#FF1A1A', textDecoration: 'none', transition: 'background 0.3s' }}>
-                   <span style={{ fontSize: '18px' }}>Y</span>
-                   {langData.reviewYelp}
-                 </a>
-               </div>
-             </div>
-           )}
-
-                     <div style={{ marginTop: '48px' }}>
-             <h2 style={{ fontSize: '32px', fontWeight: 'bold', textAlign: 'center', marginBottom: '32px', color: '#131316' }}>{langData.testimonialsTitle}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', width: '100%', maxWidth: '1024px', margin: '0 auto' }}>
-              {TESTIMONIALS.map((testimonial, index) => (
-                <div key={index} style={{ borderRadius: '12px', border: '1px solid #d9dfed', background: '#f8f9fb', padding: '24px', display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', marginBottom: '4px' }}>
-                    <span style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 'bold', color: '#6b7280' }}>{testimonial.initial}</span>
-                    <span style={{ fontWeight: '600', color: '#131316' }}>{testimonial.name}</span>
-                    <span style={{ display: 'flex', color: '#fbbf24', fontSize: '18px' }}>★★★★★</span>
+        {/* Rating Section */}
+        <div style={{ marginBottom: '25px' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '8px',
+            padding: '0 10px'
+          }}>
+            {RATING_EMOJIS.map((rating) => (
+              <label key={rating.value} style={{
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '12px',
+                minWidth: '60px',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                transition: 'all 0.3s ease'
+              }}>
+                <input
+                  type="radio"
+                  name="rating"
+                  value={rating.value}
+                  style={{ display: 'none' }}
+                  onChange={() => handleRatingChange(rating.value)}
+                  checked={selectedRating === rating.value}
+                />
+                <img
+                  src={rating.src}
+                  alt={rating.alt}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    opacity: selectedRating === rating.value ? 1 : 0.4,
+                    transform: selectedRating === rating.value ? 'scale(1.1)' : 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+                {selectedRating === rating.value && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-35px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: 'white',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(90deg, #667eea, #764ba2)',
+                    whiteSpace: 'nowrap',
+                    zIndex: 10
+                  }}>
+                    {langData.ratingLabels[selectedRating]}
                   </div>
-                  <div style={{ color: '#131316', fontSize: '16px' }}>{testimonial.text}</div>
-                </div>
-              ))}
+                )}
+              </label>
+            ))}
+          </div>
+        </div>
+        
+        {/* Feedback Form */}
+        {showFeedbackForm && (
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.8)',
+            borderRadius: '16px',
+            padding: '20px',
+            marginBottom: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.3)'
+          }}>
+            <form onSubmit={handleSubmitFeedback}>
+              <h3 style={{
+                fontSize: '16px',
+                fontWeight: '600',
+                color: '#1a202c',
+                marginBottom: '15px',
+                textAlign: 'center'
+              }}>
+                {langData.feedbackTitle}
+              </h3>
+              <textarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                placeholder={langData.feedbackPlaceholder}
+                maxLength="500"
+                style={{
+                  width: '100%',
+                  minHeight: '100px',
+                  background: 'white',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  color: '#1a202c',
+                  fontSize: '14px',
+                  resize: 'vertical',
+                  marginBottom: '15px',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <button
+                type="submit"
+                disabled={submissionStatus !== 'idle'}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '25px',
+                  fontWeight: '600',
+                  color: 'white',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                {getSubmitButtonText()}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Review Options */}
+        {showReviewOptions && (
+          <div ref={reviewOptionsRef} style={{
+            textAlign: 'center',
+            padding: '20px 0'
+          }}>
+            <h2 style={{
+              fontSize: '18px',
+              fontWeight: '700',
+              color: '#1a202c',
+              marginBottom: '20px'
+            }}>
+              {langData.reviewOptionsTitle}
+            </h2>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <a href={`https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 style={{
+                   display: 'flex',
+                   alignItems: 'center',
+                   justifyContent: 'center',
+                   gap: '10px',
+                   padding: '12px',
+                   borderRadius: '25px',
+                   fontWeight: '600',
+                   color: 'white',
+                   background: '#FFC107',
+                   textDecoration: 'none',
+                   fontSize: '14px',
+                   transition: 'all 0.3s ease'
+                 }}>
+                <span style={{ fontSize: '16px', fontWeight: 'bold' }}>G</span>
+                {langData.reviewGoogle}
+              </a>
+              <a href={FACEBOOK_PAGE_URL}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 style={{
+                   display: 'flex',
+                   alignItems: 'center',
+                   justifyContent: 'center',
+                   gap: '10px',
+                   padding: '12px',
+                   borderRadius: '25px',
+                   fontWeight: '600',
+                   color: 'white',
+                   background: '#1877F2',
+                   textDecoration: 'none',
+                   fontSize: '14px',
+                   transition: 'all 0.3s ease'
+                 }}>
+                <span style={{ fontSize: '16px', fontWeight: 'bold' }}>f</span>
+                {langData.reviewFacebook}
+              </a>
+              <a href={YELP_PAGE_URL}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 style={{
+                   display: 'flex',
+                   alignItems: 'center',
+                   justifyContent: 'center',
+                   gap: '10px',
+                   padding: '12px',
+                   borderRadius: '25px',
+                   fontWeight: '600',
+                   color: 'white',
+                   background: '#FF1A1A',
+                   textDecoration: 'none',
+                   fontSize: '14px',
+                   transition: 'all 0.3s ease'
+                 }}>
+                <span style={{ fontSize: '16px', fontWeight: 'bold' }}>Y</span>
+                {langData.reviewYelp}
+              </a>
             </div>
+          </div>
+        )}
+
+        {/* Testimonials Section */}
+        <div style={{ marginTop: '30px' }}>
+          <h2 style={{
+            fontSize: '18px',
+            fontWeight: '700',
+            textAlign: 'center',
+            marginBottom: '20px',
+            color: '#1a202c'
+          }}>
+            {langData.testimonialsTitle}
+          </h2>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px'
+          }}>
+            {TESTIMONIALS.slice(0, 3).map((testimonial, index) => (
+              <div key={index} style={{
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0',
+                background: '#f8f9fa',
+                padding: '15px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '5px'
+                }}>
+                  <span style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: '#e2e8f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    color: '#64748b'
+                  }}>
+                    {testimonial.initial}
+                  </span>
+                  <span style={{
+                    fontWeight: '600',
+                    color: '#1a202c',
+                    fontSize: '14px'
+                  }}>
+                    {testimonial.name}
+                  </span>
+                  <span style={{
+                    color: '#fbbf24',
+                    fontSize: '14px'
+                  }}>
+                    ★★★★★
+                  </span>
+                </div>
+                <div style={{
+                  color: '#4a5568',
+                  fontSize: '13px',
+                  lineHeight: '1.4'
+                }}>
+                  {testimonial.text}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
