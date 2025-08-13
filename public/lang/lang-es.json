@@ -1,0 +1,19 @@
+{
+  "greeting": "Hola {customerName},",
+  "question": "💬 Nos encantaría recibir tus comentarios?",
+  "ratingLabels": {
+    "1": "Terrible",
+    "2": "Malo",
+    "3": "Regular",
+    "4": "Bueno",
+    "5": "Excelente"
+  },
+  "feedbackTitle": "¿Cómo podemos mejorar?",
+  "feedbackPlaceholder": "Cuéntanos qué salió mal y cómo podemos mejorar...",
+  "submitFeedback": "Enviar comentarios",
+  "redirectingGoogle": "Redirigiendo a Google Reviews...",
+  "thankYouPositive": "¡Gracias por tus comentarios positivos! Hemos abierto Google Reviews para que compartas tu experiencia.",
+  "thankYouNegative": "Gracias por tus comentarios honestos. Usaremos esto para mejorar nuestros servicios.",
+  "pleaseImprove": "Por favor, dinos cómo podemos mejorar tu experiencia.",
+  "testimonialsTitle": "Lo que otros están diciendo"
+}

@@ -1,0 +1,330 @@
+/* Main styles for RatingWidget component */
+.rating-widget {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(145deg, #f6f7fb, #e2e8f0); /* Subtle gradient for depth */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background animation */
+.rating-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  animation: pulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.container {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(235, 238, 245, 0.9)); /* Glassmorphism effect */
+  backdrop-filter: blur(12px); /* Enhanced blur for modern look */
+  border-radius: 24px; /* Consistent with ReviewForm */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2.5rem;
+  max-width: 480px; /* Slightly wider for balance */
+  width: 100%;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05); /* Layered shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px); /* Subtle lift on hover */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.content {
+  background: #ffffff; /* Pure white for contrast */
+  border: 2px solid #cbd5e1; /* Softer border color */
+  border-radius: 16px; /* Slightly smaller than container */
+  padding: 1.5rem;
+}
+
+.header {
+  margin-bottom: 2.5rem; /* Consistent spacing */
+}
+
+.greeting {
+  font-size: 1.5rem; /* 24px */
+  color: #1a202c; /* Softer dark color */
+  font-weight: 700; /* Bolder for emphasis */
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em; /* Subtle elegance */
+}
+
+.question {
+  font-size: 1.125rem; /* 18px */
+  color: #2d3748; /* Slightly lighter for hierarchy */
+  margin-bottom: 0.5rem;
+  line-height: 1.5; /* Improved readability */
+}
+
+.salon-name {
+  font-size: 1.25rem; /* 20px */
+  color: #1a202c;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.rating-section {
+  margin-bottom: 1.5rem; /* Adjusted for balance */
+}
+
+.stars-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; /* Consistent spacing */
+}
+
+.star-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
+  transition: transform 0.3s ease, filter 0.3s ease; /* Smoother transition */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 90px; /* Slightly taller for balance */
+  position: relative;
+}
+
+.star-button:hover {
+  transform: scale(1.15); /* Slightly larger hover effect */
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)); /* Subtle shadow */
+}
+
+.star-button.selected {
+  transform: scale(1.25); /* More pronounced selection */
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+}
+
+.star-icon {
+  font-size: 2.5rem; /* 40px */
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+  color: #d4d4d8; /* Neutral default */
+}
+
+.star-button:hover .star-icon,
+.star-button.selected .star-icon {
+  color: #facc15; /* Vibrant gold for stars */
+  transform: scale(1.1); /* Subtle bounce */
+}
+
+.emoji {
+  font-size: 1.5rem; /* 24px */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.star-button:hover .emoji,
+.star-button.selected .emoji {
+  opacity: 1;
+  transform: translateY(-2px); /* Subtle lift */
+}
+
+.rating-label {
+  font-size: 1.125rem; /* 18px */
+  color: #2d3748;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.feedback-form {
+  background: rgba(255, 255, 255, 0.15); /* Slightly stronger opacity */
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feedback-form:hover {
+  transform: translateY(-3px); /* Subtle lift */
+}
+
+.feedback-title {
+  font-size: 1.125rem; /* 18px */
+  color: #1a202c;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.feedback-input {
+  width: 100%;
+  min-height: 120px; /* Slightly taller for comfort */
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 1rem;
+  color: #1a202c;
+  font-size: 1rem; /* 16px */
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feedback-input:focus {
+  border-color: #5e60ce; /* Matches ReviewForm gradient */
+  box-shadow: 0 0 8px rgba(94, 96, 206, 0.3); /* Subtle glow */
+  outline: none;
+}
+
+.feedback-input::placeholder {
+  color: #6b7280; /* Softer gray */
+  opacity: 0.8;
+}
+
+.submit-button {
+  box-shadow: 0 6px #5e35b1; /* Deeper shadow for depth */
+  background: linear-gradient(135deg, #7c3aed, #5e60ce); /* Gradient for vibrancy */
+  border: 2px solid #5e35b1;
+  border-radius: 20px;
+  padding: 0.75rem 1.75rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9, #4c4eb5);
+  transform: translateY(-3px); /* Subtle lift */
+  box-shadow: 0 8px #5e35b1;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-text {
+  color: #f6f7fb; /* Brighter for contrast */
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.hidden {
+  display: none;
+}
+
+.app-download {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.app-download:hover {
+  transform: translateY(-3px);
+}
+
+.app-download h3 {
+  color: #1a202c;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.app-download p {
+  color: #2d3748;
+  font-size: 0.875rem; /* 14px */
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.download-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.download-btn {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  color: #1a202c;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.highlight {
+  background: #ede9fe; /* Softer purple tint */
+  border-radius: 16px;
+  padding: 0.5rem 0.75rem;
+  display: inline-flex;
+  color: #7c3aed;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.highlight:hover {
+  background: #ddd6fe;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .greeting {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  .star-icon {
+    font-size: 2.25rem; /* 36px */
+  }
+
+  .emoji {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  .feedback-input {
+    min-height: 100px;
+  }
+}
+
+.pointer-hand-good {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(-15deg);
+  bottom: -20px;
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.star-button.good-pointer:hover .pointer-hand-good {
+  transform: translateX(-50%) rotate(-10deg) scale(1.1); /* Subtle animation */
+}
