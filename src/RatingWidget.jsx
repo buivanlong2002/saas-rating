@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import apiService from './services/api';
 import './RatingWidget.css';
 
@@ -6,6 +8,12 @@ const LANGUAGES = {
   en: '/lang/lang-en.json',
   vi: '/lang/lang-vi.json',
   es: '/lang/lang-es.json'
+};
+
+const LANGUAGE_NAMES = {
+  en: 'English',
+  vi: 'Tiếng Việt',
+  es: 'Español'
 };
 
 const RATING_EMOJIS = [
@@ -31,6 +39,7 @@ const YELP_PAGE_URL = 'https://www.yelp.com/biz/your-business'; // Thay thế b�
 
 function RatingWidget() {
   const [langData, setLangData] = useState(null);
+  const [currentLang, setCurrentLang] = useState('en');
   const [customerName, setCustomerName] = useState('Customer');
   const [salonName, setSalonName] = useState('');
   const [selectedRating, setSelectedRating] = useState(0);
@@ -38,7 +47,9 @@ function RatingWidget() {
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [showReviewOptions, setShowReviewOptions] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState('idle');
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const reviewOptionsRef = useRef(null);
+  const languageDropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -48,20 +59,45 @@ function RatingWidget() {
       // Sử dụng thông tin từ URL parameters hoặc mặc định
       setCustomerName(urlParams.get('customerName') || 'Customer');
       setSalonName(urlParams.get('salonName') || '');
+      setCurrentLang(lang);
 
-      try {
-        const response = await fetch(LANGUAGES[lang] || LANGUAGES['en']);
-        const data = await response.json();
-        setLangData(data);
-      } catch (error) {
-        console.error("Failed to load language file:", error);
-        const response = await fetch(LANGUAGES['en']);
-        const data = await response.json();
-        setLangData(data);
-      }
+      await loadLanguageData(lang);
     };
 
     fetchInitialData();
+  }, []);
+
+  const loadLanguageData = async (lang) => {
+    try {
+      const response = await fetch(LANGUAGES[lang] || LANGUAGES['en']);
+      const data = await response.json();
+      setLangData(data);
+    } catch (error) {
+      console.error("Failed to load language file:", error);
+      const response = await fetch(LANGUAGES['en']);
+      const data = await response.json();
+      setLangData(data);
+    }
+  };
+
+  const handleLanguageChange = async (newLang) => {
+    setCurrentLang(newLang);
+    setShowLanguageDropdown(false);
+    await loadLanguageData(newLang);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target)) {
+        setShowLanguageDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -87,6 +123,34 @@ function RatingWidget() {
     }
   }, [showReviewOptions]);
 
+  const showNotification = (message, type = 'error') => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    };
+
+    switch (type) {
+      case 'success':
+        toast.success(message, toastOptions);
+        break;
+      case 'warning':
+        toast.warning(message, toastOptions);
+        break;
+      case 'info':
+        toast.info(message, toastOptions);
+        break;
+      default:
+        toast.error(message, toastOptions);
+        break;
+    }
+  };
+
   const handleRatingChange = (rating) => {
     setSelectedRating(rating);
   };
@@ -97,6 +161,7 @@ function RatingWidget() {
     
     if (!reviewToken) {
       console.error('No review token found');
+      showNotification(langData.notifications?.tokenNotFound || 'Review token not found. Please try again.', 'error');
       return { success: false, message: 'No review token found' };
     }
 
@@ -120,10 +185,12 @@ function RatingWidget() {
         return { success: true, message: result.message };
       } else {
         console.error('API submission failed:', result.message);
+        showNotification(`Lỗi: ${result.message}`, 'error');
         return { success: false, message: result.message };
       }
     } catch (error) {
       console.error('API Error:', error);
+      showNotification(langData.notifications?.apiError || 'An error occurred while connecting to the server. Please try again.', 'error');
       return { success: false, message: error.message };
     }
   };
@@ -131,7 +198,7 @@ function RatingWidget() {
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
     if (!feedback.trim()) {
-      alert(langData.pleaseImprove || 'Please tell us how we can improve.');
+      showNotification(langData.notifications?.validationError || langData.pleaseImprove || 'Please tell us how we can improve.', 'warning');
       return;
     }
     setSubmissionStatus('submitting');
@@ -143,12 +210,11 @@ function RatingWidget() {
         setSubmissionStatus('submitted');
         // Không cần alert nữa, sẽ hiển thị UI cảm ơn
       } else {
-        alert(`Lỗi: ${result.message}`);
         setSubmissionStatus('idle');
       }
     } catch (error) {
       console.error('Submit error:', error);
-      alert('Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.');
+      showNotification(langData.notifications?.submitError || 'An error occurred while submitting your review. Please try again.', 'error');
       setSubmissionStatus('idle');
     }
   };
@@ -217,51 +283,6 @@ function RatingWidget() {
                 Phản hồi của bạn sẽ giúp chúng tôi cải thiện chất lượng dịch vụ và mang đến trải nghiệm tốt hơn cho tất cả khách hàng.
               </p>
             </div>
-
-            {/* Thông tin bổ sung */}
-            <div style={{ 
-              background: '#f8f9fa', 
-              padding: '1.5rem', 
-              borderRadius: '12px', 
-              border: '1px solid #e9ecef',
-              marginBottom: '2rem'
-            }}>
-              <p style={{ 
-                fontSize: '14px', 
-                color: '#6c757d', 
-                margin: '0',
-                fontStyle: 'italic'
-              }}>
-                💡 <strong>Mẹo:</strong> Hãy chia sẻ trải nghiệm tuyệt vời này với bạn bè và gia đình!
-              </p>
-            </div>
-
-            {/* Nút đóng */}
-            <button 
-              onClick={() => window.close()} 
-              style={{
-                background: 'linear-gradient(135deg, #4CAF50, #45a049)',
-                color: 'white',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 2px 8px rgba(76, 175, 80, 0.3)';
-              }}
-            >
-              Đóng trang
-            </button>
           </div>
         </div>
       </div>
@@ -270,8 +291,106 @@ function RatingWidget() {
 
   return (
     <div className="rating-widget" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd', padding: '1rem' }}>
+      {/* React Toastify Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{ zIndex: 9999 }}
+      />
+
       <div className="container" style={{ maxWidth: '1024px', width: '100%', margin: '0 auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', borderRadius: '16px', background: '#ebeef5', padding: '4px' }}>
-        <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed' }}>
+        <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed', position: 'relative' }}>
+          
+          {/* Language Selector */}
+          <div ref={languageDropdownRef} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
+            <button
+              onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+              style={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                border: '1px solid #d9dfed',
+                borderRadius: '8px',
+                padding: '8px 12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '14px',
+                color: '#131316',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 1)';
+                e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              <span>🌐</span>
+              <span>{LANGUAGE_NAMES[currentLang]}</span>
+              <span style={{ 
+                transform: showLanguageDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease'
+              }}>
+                ▼
+              </span>
+            </button>
+            
+            {showLanguageDropdown && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                background: 'white',
+                border: '1px solid #d9dfed',
+                borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                minWidth: '120px',
+                marginTop: '4px',
+                animation: 'fadeIn 0.2s ease-out'
+              }}>
+                {Object.entries(LANGUAGE_NAMES).map(([code, name]) => (
+                  <button
+                    key={code}
+                    onClick={() => handleLanguageChange(code)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      border: 'none',
+                      background: currentLang === code ? '#f3f4f6' : 'transparent',
+                      color: currentLang === code ? '#7852f4' : '#131316',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      textAlign: 'left',
+                      transition: 'all 0.2s ease',
+                      borderBottom: code !== Object.keys(LANGUAGE_NAMES).slice(-1)[0] ? '1px solid #f3f4f6' : 'none'
+                    }}
+                    onMouseOver={(e) => {
+                      if (currentLang !== code) {
+                        e.target.style.background = '#f9fafb';
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      if (currentLang !== code) {
+                        e.target.style.background = 'transparent';
+                      }
+                    }}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           
           <div className="header" style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
             <h1 className="greeting" style={{ fontSize: '24px', fontWeight: '600', color: '#131316', marginBottom: '8px' }}>

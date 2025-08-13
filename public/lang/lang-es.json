@@ -11,9 +11,21 @@
   "feedbackTitle": "¿Cómo podemos mejorar?",
   "feedbackPlaceholder": "Cuéntanos qué salió mal y cómo podemos mejorar...",
   "submitFeedback": "Enviar comentarios",
+  "submitting": "Enviando...",
+  "submitted": "Enviado ✓",
   "redirectingGoogle": "Redirigiendo a Google Reviews...",
   "thankYouPositive": "¡Gracias por tus comentarios positivos! Hemos abierto Google Reviews para que compartas tu experiencia.",
   "thankYouNegative": "Gracias por tus comentarios honestos. Usaremos esto para mejorar nuestros servicios.",
   "pleaseImprove": "Por favor, dinos cómo podemos mejorar tu experiencia.",
-  "testimonialsTitle": "Lo que otros están diciendo"
+  "testimonialsTitle": "Lo que otros están diciendo",
+  "reviewOptionsTitle": "¿Dónde te gustaría dejar tu reseña?",
+  "reviewGoogle": "Reseñanos en Google",
+  "reviewFacebook": "Reseñanos en Facebook",
+  "reviewYelp": "Míranos en Yelp",
+  "notifications": {
+    "tokenNotFound": "Token de reseña no encontrado. Por favor, inténtalo de nuevo.",
+    "apiError": "Ocurrió un error al conectar con el servidor. Por favor, inténtalo de nuevo.",
+    "submitError": "Ocurrió un error al enviar tu reseña. Por favor, inténtalo de nuevo.",
+    "validationError": "Por favor, dinos cómo podemos mejorar."
+  }
 }

@@ -11,9 +11,21 @@
   "feedbackTitle": "Chúng tôi có thể cải thiện điều gì?",
   "feedbackPlaceholder": "Hãy cho chúng tôi biết điều chưa tốt và cách chúng tôi có thể cải thiện...",
   "submitFeedback": "Gửi phản hồi",
+  "submitting": "Đang gửi...",
+  "submitted": "Đã gửi ✓",
   "redirectingGoogle": "Đang chuyển đến Google Reviews...",
   "thankYouPositive": "Cảm ơn bạn đã đánh giá tích cực! Chúng tôi đã mở Google Reviews để bạn chia sẻ trải nghiệm.",
   "thankYouNegative": "Cảm ơn bạn đã phản hồi. Chúng tôi sẽ sử dụng ý kiến này để cải thiện dịch vụ.",
   "pleaseImprove": "Vui lòng cho chúng tôi biết cách cải thiện trải nghiệm của bạn.",
-  "testimonialsTitle": "Những đánh giá khác"
+  "testimonialsTitle": "Những đánh giá khác",
+  "reviewOptionsTitle": "Bạn muốn đánh giá ở đâu?",
+  "reviewGoogle": "Đánh giá chúng tôi trên Google",
+  "reviewFacebook": "Đánh giá chúng tôi trên Facebook",
+  "reviewYelp": "Xem chúng tôi trên Yelp",
+  "notifications": {
+    "tokenNotFound": "Không tìm thấy token đánh giá. Vui lòng thử lại.",
+    "apiError": "Có lỗi xảy ra khi kết nối với máy chủ. Vui lòng thử lại.",
+    "submitError": "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.",
+    "validationError": "Vui lòng cho chúng tôi biết cách cải thiện."
+  }
 }

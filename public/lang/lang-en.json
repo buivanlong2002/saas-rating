@@ -11,6 +11,8 @@
   "feedbackTitle": "How can we improve?",
   "feedbackPlaceholder": "Tell us what went wrong and how we can do better...",
   "submitFeedback": "Submit Feedback",
+  "submitting": "Submitting...",
+  "submitted": "Submitted ✓",
   "redirectingGoogle": "Redirecting to Google Reviews...",
   "thankYouPositive": "Thank you for your positive feedback! We've opened Google Reviews for you to share your experience.",
   "thankYouNegative": "Thank you for your honest feedback. We will use this to improve our services.",
@@ -19,5 +21,11 @@
   "reviewOptionsTitle": "Where would you like to leave your review?",
   "reviewGoogle": "Review us on Google",
   "reviewFacebook": "Review us on Facebook",
-  "reviewYelp": "Check us out on Yelp"
+  "reviewYelp": "Check us out on Yelp",
+  "notifications": {
+    "tokenNotFound": "Review token not found. Please try again.",
+    "apiError": "An error occurred while connecting to the server. Please try again.",
+    "submitError": "An error occurred while submitting your review. Please try again.",
+    "validationError": "Please tell us how we can improve."
+  }
 }
