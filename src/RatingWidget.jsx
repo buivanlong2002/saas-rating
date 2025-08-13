@@ -236,23 +236,6 @@ function RatingWidget() {
         <div className="container" style={{ maxWidth: '600px', width: '100%', margin: '0 auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', borderRadius: '16px', background: '#ebeef5', padding: '4px' }}>
           <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed', textAlign: 'center' }}>
             
-            {/* Icon cảm ơn */}
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                background: 'linear-gradient(135deg, #4CAF50, #45a049)', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                margin: '0 auto',
-                boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)'
-              }}>
-                <span style={{ fontSize: '40px', color: 'white' }}>✓</span>
-              </div>
-            </div>
-
             {/* Tiêu đề cảm ơn */}
             <h1 style={{ 
               fontSize: '28px', 
@@ -261,7 +244,7 @@ function RatingWidget() {
               marginBottom: '1rem',
               textAlign: 'center'
             }}>
-              Cảm ơn bạn! 🙏
+              {langData.thankYou?.title || 'Thank you! 🙏'}
             </h1>
 
             {/* Nội dung cảm ơn */}
@@ -272,7 +255,7 @@ function RatingWidget() {
                 lineHeight: '1.6',
                 marginBottom: '1rem'
               }}>
-                Chúng tôi rất trân trọng đánh giá của bạn về dịch vụ tại <strong>{salonName}</strong>.
+                {langData.thankYou?.message?.replace('{salonName}', salonName) || `We really appreciate your feedback about the service at ${salonName}.`}
               </p>
               
               <p style={{ 
@@ -280,7 +263,7 @@ function RatingWidget() {
                 color: '#666', 
                 lineHeight: '1.5'
               }}>
-                Phản hồi của bạn sẽ giúp chúng tôi cải thiện chất lượng dịch vụ và mang đến trải nghiệm tốt hơn cho tất cả khách hàng.
+                {langData.thankYou?.subtitle || 'Your feedback will help us improve our service quality and provide a better experience for all customers.'}
               </p>
             </div>
           </div>

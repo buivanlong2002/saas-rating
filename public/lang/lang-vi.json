@@ -27,5 +27,10 @@
     "apiError": "Có lỗi xảy ra khi kết nối với máy chủ. Vui lòng thử lại.",
     "submitError": "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.",
     "validationError": "Vui lòng cho chúng tôi biết cách cải thiện."
+  },
+  "thankYou": {
+    "title": "Cảm ơn bạn! 🙏",
+    "message": "Chúng tôi rất trân trọng đánh giá của bạn về dịch vụ tại {salonName}.",
+    "subtitle": "Phản hồi của bạn sẽ giúp chúng tôi cải thiện chất lượng dịch vụ và mang đến trải nghiệm tốt hơn cho tất cả khách hàng."
   }
 }

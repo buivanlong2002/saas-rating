@@ -27,5 +27,10 @@
     "apiError": "Ocurrió un error al conectar con el servidor. Por favor, inténtalo de nuevo.",
     "submitError": "Ocurrió un error al enviar tu reseña. Por favor, inténtalo de nuevo.",
     "validationError": "Por favor, dinos cómo podemos mejorar."
+  },
+  "thankYou": {
+    "title": "¡Gracias! 🙏",
+    "message": "Realmente apreciamos tus comentarios sobre el servicio en {salonName}.",
+    "subtitle": "Tus comentarios nos ayudarán a mejorar la calidad de nuestro servicio y proporcionar una mejor experiencia para todos los clientes."
   }
 }
