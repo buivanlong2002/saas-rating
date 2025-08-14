@@ -232,9 +232,9 @@ function RatingWidget() {
   // Hiển thị màn hình cảm ơn khi đã submit thành công
   if (submissionStatus === 'submitted') {
     return (
-      <div className="rating-widget" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd', padding: '1rem' }}>
-        <div className="container" style={{ maxWidth: '600px', width: '100%', margin: '0 auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', borderRadius: '16px', background: '#ebeef5', padding: '4px' }}>
-          <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed', textAlign: 'center' }}>
+      <div className="rating-widget">
+        <div className="container" style={{ maxWidth: '600px' }}>
+          <div className="content" style={{ textAlign: 'center' }}>
             
             {/* Tiêu đề cảm ơn */}
             <h1 style={{ 
@@ -273,7 +273,7 @@ function RatingWidget() {
   }
 
   return (
-    <div className="rating-widget" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd', padding: '1rem' }}>
+    <div className="rating-widget">
       {/* React Toastify Container */}
       <ToastContainer
         position="top-right"
@@ -289,11 +289,11 @@ function RatingWidget() {
         style={{ zIndex: 9999 }}
       />
 
-      <div className="container" style={{ maxWidth: '1024px', width: '100%', margin: '0 auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', borderRadius: '16px', background: '#ebeef5', padding: '4px' }}>
-        <div className="content" style={{ padding: '3rem', borderRadius: '16px', background: 'white', border: '2px solid #d9dfed', position: 'relative' }}>
+      <div className="container">
+        <div className="content">
           
           {/* Language Selector */}
-          <div ref={languageDropdownRef} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
+          <div ref={languageDropdownRef} className="language-dropdown" style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
             <button
               onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
               style={{
@@ -375,17 +375,17 @@ function RatingWidget() {
             )}
           </div>
           
-          <div className="header" style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-            <h1 className="greeting" style={{ fontSize: '24px', fontWeight: '600', color: '#131316', marginBottom: '8px' }}>
-              {langData.greeting.replace('{customerName}', customerName)}
-            </h1>
-            <p className="question" style={{ fontSize: '18px', color: '#131316', marginBottom: '4px' }}>{langData.question}</p>
-          </div>
+                     <div className="header">
+             <h1 className="greeting">
+               {langData.greeting.replace('{customerName}', customerName)}
+             </h1>
+             <p className="question">{langData.question}</p>
+           </div>
 
-          <div className="rating-section" style={{ marginBottom: '0' }}>
-            <div className="stars-container" style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '8px', position: 'relative' }}>
+           <div className="rating-section">
+             <div className="stars-container">
               {RATING_EMOJIS.map((rating) => (
-                <label key={rating.value} className="star-button" style={{ cursor: 'pointer', padding: '8px', borderRadius: '8px', minWidth: '80px', position: 'relative' }}>
+                                 <label key={rating.value} className="star-button">
                   <input
                     type="radio"
                     name="rating"
@@ -394,20 +394,20 @@ function RatingWidget() {
                     onChange={() => handleRatingChange(rating.value)}
                     checked={selectedRating === rating.value}
                   />
-                  <img
-                    className="emoji"
-                    src={rating.src}
-                    alt={rating.alt}
-                    style={{
-                      width: '32px',
-                      height: 'auto',
-                      opacity: selectedRating === rating.value ? 1 : 0.4,
-                      transform: selectedRating === rating.value ? 'scale(1.2)' : 'scale(1)',
-                      transition: 'opacity 0.3s, transform 0.3s'
-                    }}
-                  />
-                  {selectedRating === rating.value && (
-                                         <div className="rating-tooltip" style={{ 
+                                     <img
+                     className="emoji"
+                     src={rating.src}
+                     alt={rating.alt}
+                                           style={{
+                        width: '36px',
+                        height: '36px',
+                        opacity: selectedRating === rating.value ? 1 : 0.4,
+                        transform: selectedRating === rating.value ? 'scale(1.2)' : 'scale(1)',
+                        transition: 'opacity 0.3s, transform 0.3s'
+                      }}
+                   />
+                                     {selectedRating === rating.value && (
+                     <div className="rating-tooltip" style={{ 
                        position: 'absolute', 
                        top: '-48px', 
                        left: '50%', 
@@ -423,72 +423,73 @@ function RatingWidget() {
                        background: 'linear-gradient(90deg,#a78bfa 0%,#fbc2eb 100%)', 
                        boxShadow: '0 4px 16px 0 rgba(167,139,250,0.12)'
                      }}>
-                      {langData.ratingLabels[selectedRating]}
-                    </div>
-                  )}
+                       {langData.ratingLabels[selectedRating]}
+                     </div>
+                   )}
+                   
                 </label>
               ))}
             </div>
           </div>
           
-          {showFeedbackForm && (
-            <div className="feedback-form" style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '12px', padding: '24px', marginTop: '32px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.2)', transition: 'all 0.5s ease-in-out' }}>
-              <form onSubmit={handleSubmitFeedback}>
-                <h3 className="feedback-title" style={{ fontSize: '18px', fontWeight: '500', color: '#131316', marginBottom: '16px' }}>{langData.feedbackTitle}</h3>
-                <textarea
-                  className="feedback-input"
-                  style={{ width: '100%', minHeight: '100px', background: 'white', border: '2px solid #d9dfed', borderRadius: '8px', padding: '16px', color: '#131316', fontSize: '16px', resize: 'vertical', marginBottom: '16px' }}
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  placeholder={langData.feedbackPlaceholder}
-                  maxLength="500"
-                />
-                <button
-                  type="submit"
-                  className="submit-button"
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#7852f4', border: 'none', cursor: 'pointer', transition: 'all 0.3s' }}
-                  disabled={submissionStatus !== 'idle'}
-                >
-                  {getSubmitButtonText()}
-                </button>
-              </form>
-            </div>
-          )}
-
-                     {showReviewOptions && (
-             <div ref={reviewOptionsRef} id="reviewOptions" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 0' }}>
-               <h2 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px' }}>{langData.reviewOptionsTitle}</h2>
-               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '320px' }}>
-                 <a href={`https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`} id="reviewGoogle" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#FFC107', textDecoration: 'none', transition: 'background 0.3s' }}>
-                   <span style={{ fontSize: '18px' }}>G</span>
-                   {langData.reviewGoogle}
-                 </a>
-                 <a href={FACEBOOK_PAGE_URL} id="reviewFacebook" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#1877F2', textDecoration: 'none', transition: 'background 0.3s' }}>
-                   <span style={{ fontSize: '18px' }}>f</span>
-                   {langData.reviewFacebook}
-                 </a>
-                 <a href={YELP_PAGE_URL} id="reviewYelp" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', borderRadius: '8px', fontWeight: '600', color: 'white', background: '#FF1A1A', textDecoration: 'none', transition: 'background 0.3s' }}>
-                   <span style={{ fontSize: '18px' }}>Y</span>
-                   {langData.reviewYelp}
-                 </a>
-               </div>
+                     {showFeedbackForm && (
+             <div className="feedback-form">
+               <form onSubmit={handleSubmitFeedback}>
+                 <h3 className="feedback-title">{langData.feedbackTitle}</h3>
+                 <textarea
+                   className="feedback-input"
+                   value={feedback}
+                   onChange={(e) => setFeedback(e.target.value)}
+                   placeholder={langData.feedbackPlaceholder}
+                   maxLength="500"
+                 />
+                 <button
+                   type="submit"
+                   className="submit-button"
+                   disabled={submissionStatus !== 'idle'}
+                 >
+                   {getSubmitButtonText()}
+                 </button>
+               </form>
              </div>
            )}
 
-                     <div style={{ marginTop: '48px' }}>
-             <h2 style={{ fontSize: '32px', fontWeight: 'bold', textAlign: 'center', marginBottom: '32px', color: '#131316' }}>{langData.testimonialsTitle}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', width: '100%', maxWidth: '1024px', margin: '0 auto' }}>
-              {TESTIMONIALS.map((testimonial, index) => (
-                <div key={index} style={{ borderRadius: '12px', border: '1px solid #d9dfed', background: '#f8f9fb', padding: '24px', display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', marginBottom: '4px' }}>
-                    <span style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 'bold', color: '#6b7280' }}>{testimonial.initial}</span>
-                    <span style={{ fontWeight: '600', color: '#131316' }}>{testimonial.name}</span>
-                    <span style={{ display: 'flex', color: '#fbbf24', fontSize: '18px' }}>★★★★★</span>
-                  </div>
-                  <div style={{ color: '#131316', fontSize: '16px' }}>{testimonial.text}</div>
+                     {showReviewOptions && (
+                           <div ref={reviewOptionsRef} id="reviewOptions" className="review-options">
+                <h2>{langData.reviewOptionsTitle}</h2>
+                <div className="review-buttons">
+                  <a href={`https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`} id="reviewGoogle" target="_blank" rel="noopener noreferrer" className="google">
+                    <span>G</span>
+                    {langData.reviewGoogle}
+                  </a>
+                  <a href={FACEBOOK_PAGE_URL} id="reviewFacebook" target="_blank" rel="noopener noreferrer" className="facebook">
+                    <span>f</span>
+                    {langData.reviewFacebook}
+                  </a>
+                  <a href={YELP_PAGE_URL} id="reviewYelp" target="_blank" rel="noopener noreferrer" className="yelp">
+                    <span>Y</span>
+                    {langData.reviewYelp}
+                  </a>
                 </div>
-              ))}
-            </div>
+              </div>
+           )}
+
+                     <div className="testimonials-section">
+             <h2>{langData.testimonialsTitle}</h2>
+                         <div className="testimonials-grid">
+               {TESTIMONIALS.map((testimonial, index) => (
+                 <div key={index} className="testimonial-card">
+                   <div className="testimonial-header">
+                     <div className="testimonial-avatar">{testimonial.initial}</div>
+                     <div className="testimonial-info">
+                       <div className="testimonial-name">{testimonial.name}</div>
+                       <div className="testimonial-stars">★★★★★</div>
+                     </div>
+                   </div>
+                   <div className="testimonial-text">{testimonial.text}</div>
+                 </div>
+               ))}
+             </div>
           </div>
         </div>
       </div>
