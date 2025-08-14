@@ -103,10 +103,7 @@ function RatingWidget() {
   useEffect(() => {
     if (selectedRating === 0) return;
 
-    if (selectedRating <= 3) {
-      setShowFeedbackForm(true);
-      setShowReviewOptions(false);
-    } else if (selectedRating >= 4) {
+    if (selectedRating >= 4) {
       // For "Good" (4) and "Great" (5) ratings, show only review options
       setShowFeedbackForm(false);
       submitRatingData(selectedRating, '', true);
@@ -114,6 +111,10 @@ function RatingWidget() {
           setShowReviewOptions(true);
       }, 300);
       return () => clearTimeout(timer);
+    } else {
+      // For ratings 1-3, show feedback form
+      setShowFeedbackForm(true);
+      setShowReviewOptions(false);
     }
   }, [selectedRating]);
 
@@ -407,22 +408,22 @@ function RatingWidget() {
                       }}
                    />
                                      {selectedRating === rating.value && (
-                     <div className="rating-tooltip" style={{ 
-                       position: 'absolute', 
-                       top: '-48px', 
-                       left: '50%', 
-                       transform: 'translateX(-50%)', 
-                       padding: '8px 16px', 
-                       fontSize: '16px', 
-                       fontWeight: '600', 
-                       color: 'white', 
-                       borderRadius: '16px', 
-                       border: '1px solid #a78bfa', 
-                       zIndex: 30, 
-                       whiteSpace: 'nowrap',
-                       background: 'linear-gradient(90deg,#a78bfa 0%,#fbc2eb 100%)', 
-                       boxShadow: '0 4px 16px 0 rgba(167,139,250,0.12)'
-                     }}>
+                                                                                       <div className="rating-tooltip" style={{ 
+                         position: 'absolute', 
+                         top: '-48px', 
+                         left: '50%', 
+                         transform: 'translateX(-50%)', 
+                         padding: '8px 16px', 
+                         fontSize: '16px', 
+                         fontWeight: '600', 
+                         color: 'white', 
+                         borderRadius: '16px', 
+                         border: '1px solid #a78bfa', 
+                         zIndex: 30, 
+                         whiteSpace: 'nowrap',
+                         background: 'linear-gradient(90deg,#a78bfa 0%,#fbc2eb 100%)', 
+                         boxShadow: '0 4px 16px 0 rgba(167,139,250,0.12)'
+                       }}>
                        {langData.ratingLabels[selectedRating]}
                      </div>
                    )}
@@ -432,27 +433,27 @@ function RatingWidget() {
             </div>
           </div>
           
-                     {showFeedbackForm && (
-             <div className="feedback-form">
-               <form onSubmit={handleSubmitFeedback}>
-                 <h3 className="feedback-title">{langData.feedbackTitle}</h3>
-                 <textarea
-                   className="feedback-input"
-                   value={feedback}
-                   onChange={(e) => setFeedback(e.target.value)}
-                   placeholder={langData.feedbackPlaceholder}
-                   maxLength="500"
-                 />
-                 <button
-                   type="submit"
-                   className="submit-button"
-                   disabled={submissionStatus !== 'idle'}
-                 >
-                   {getSubmitButtonText()}
-                 </button>
-               </form>
-             </div>
-           )}
+                                 {selectedRating > 0 && selectedRating < 4 && (
+              <div className="feedback-form">
+                <form onSubmit={handleSubmitFeedback}>
+                  <h3 className="feedback-title">{langData.feedbackTitle}</h3>
+                  <textarea
+                    className="feedback-input"
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder={langData.feedbackPlaceholder}
+                    maxLength="500"
+                  />
+                  <button
+                    type="submit"
+                    className="submit-button"
+                    disabled={submissionStatus !== 'idle'}
+                  >
+                    {getSubmitButtonText()}
+                  </button>
+                </form>
+              </div>
+            )}
 
                      {showReviewOptions && (
                            <div ref={reviewOptionsRef} id="reviewOptions" className="review-options">
@@ -474,23 +475,7 @@ function RatingWidget() {
               </div>
            )}
 
-                     <div className="testimonials-section">
-             <h2>{langData.testimonialsTitle}</h2>
-                         <div className="testimonials-grid">
-               {TESTIMONIALS.map((testimonial, index) => (
-                 <div key={index} className="testimonial-card">
-                   <div className="testimonial-header">
-                     <div className="testimonial-avatar">{testimonial.initial}</div>
-                     <div className="testimonial-info">
-                       <div className="testimonial-name">{testimonial.name}</div>
-                       <div className="testimonial-stars">★★★★★</div>
-                     </div>
-                   </div>
-                   <div className="testimonial-text">{testimonial.text}</div>
-                 </div>
-               ))}
-             </div>
-          </div>
+
         </div>
       </div>
     </div>
